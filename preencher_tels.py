@@ -40,6 +40,8 @@ def main():
     uploaded_files_dados = st.file_uploader("Escolha os arquivos de base de dados", type=["csv"], accept_multiple_files=True)
 
     if uploaded_file is not None and uploaded_files_dados:
+
+        ## Bloco do Outbound
         if opcao == "Outbound":
         # Separar arquivos RVX dos demais
             arquivos_rvx = []
@@ -142,19 +144,32 @@ def main():
                 for coluna in colunas_para_atualizar:
                     df[coluna] = df['CPF'].map(mapeamento[coluna]).combine_first(df[coluna])
 
+        ## Bloco do App
         else:
             delimitador = detectar_delimitador(uploaded_file)
+            # Criação e tratamento do DF a partir da higienização
             df = pd.read_csv(uploaded_file, sep=delimitador, encoding='latin1', low_memory=False)
-            df['FONE1'] = ""
-            df['CPF'] = df['CPF'].apply(limpar_cpf)
+            df['Email'] = ""
+            df['Nome_Cliente'] = df['Nome_Cliente'].str.strip()
+            df[['Nome', 'Sobrenome']] = df['Nome_Cliente'].str.split(' ', n=1, expand=True)
+            df['CPF'] = df['CPF'].apply(limpar_cpf) # Verificar se o filtrador já não trata os CPFs
 
+            # Criação e tratamento do DF a partir do arquivo com os dados de telefone, data de nascimento e email
             base = pd.read_csv(uploaded_files_dados[0], sep=',', encoding='latin1', low_memory=False)
             base['cpf'] = base['cpf'].apply(limpar_cpf)
             base['telefone'] = base['telefone'].apply(lambda x: validar_telefone(x, opcao))
             base['aniversario'] = base['aniversario'].str[8:10] + "/" + base['aniversario'].str[5:7] + "/" + base['aniversario'].str[0:4]
+
             
-            colunas_para_atualizar = ['FONE1', 'Data_Nascimento']
-            mapeamento_colunas = {'FONE1': 'telefone', 'Data_Nascimento': 'aniversario'}
+            colunas_para_atualizar = ['FONE1', 'Data_Nascimento', 'Email']
+
+            ## Dicionário de colunas
+            mapeamento_colunas = {
+                'FONE1': 'telefone',
+                'Data_Nascimento': 'aniversario',
+                'Email': 'email'
+                }
+            
             mapeamento = {}
 
             for coluna_df in colunas_para_atualizar:
@@ -164,9 +179,30 @@ def main():
             for coluna in colunas_para_atualizar:
                 df[coluna] = df['CPF'].map(mapeamento[coluna]).combine_first(df[coluna])
 
+
+        # Ordenar as colunas
+        ordem_colunas = [
+            'ORIGEM DO DADO', 'Nome_Cliente', 'Nome', 'Sobrenome', 'Matricula',
+            'CPF', 'Data_Nascimento', 'Mg_Emprestimo_Total',
+            'Mg_Emprestimo_Disponivel', 'Mg_Beneficio_Saque_Total',
+            'Mg_Beneficio_Saque_Disponivel', 'Mg_Cartao_Total',
+            'Mg_Cartao_Disponivel', 'Convenio', 'Vinculo_Servidor', 'Lotacao',
+            'Secretaria', 'FONE1', 'FONE2', 'FONE3', 'FONE4', 'Email',
+            'valor_liberado_emprestimo', 'valor_liberado_beneficio',
+            'valor_liberado_cartao', 'comissao_emprestimo', 'comissao_beneficio',
+            'comissao_cartao', 'valor_parcela_emprestimo',
+            'valor_parcela_beneficio', 'valor_parcela_cartao', 'banco_emprestimo',
+            'banco_beneficio', 'banco_cartao', 'prazo_emprestimo',
+            'prazo_beneficio', 'prazo_cartao', 'Campanha'
+       ]
+        
+        df = df[ordem_colunas]
+
+
         # Exibir o dataframe resultante
         st.subheader("Arquivo Processado")
         st.write(df)
+
         
         # Opção para salvar o arquivo atualizado
         st.download_button(
