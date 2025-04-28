@@ -180,23 +180,23 @@ def main():
                 df[coluna] = df['CPF'].map(mapeamento[coluna]).combine_first(df[coluna])
 
 
-        # Ordenar as colunas
-        ordem_colunas = [
-            'ORIGEM DO DADO', 'Nome_Cliente', 'Nome', 'Sobrenome', 'Matricula',
-            'CPF', 'Data_Nascimento', 'Mg_Emprestimo_Total',
-            'Mg_Emprestimo_Disponivel', 'Mg_Beneficio_Saque_Total',
-            'Mg_Beneficio_Saque_Disponivel', 'Mg_Cartao_Total',
-            'Mg_Cartao_Disponivel', 'Convenio', 'Vinculo_Servidor', 'Lotacao',
-            'Secretaria', 'FONE1', 'FONE2', 'FONE3', 'FONE4', 'Email',
-            'valor_liberado_emprestimo', 'valor_liberado_beneficio',
-            'valor_liberado_cartao', 'comissao_emprestimo', 'comissao_beneficio',
-            'comissao_cartao', 'valor_parcela_emprestimo',
-            'valor_parcela_beneficio', 'valor_parcela_cartao', 'banco_emprestimo',
-            'banco_beneficio', 'banco_cartao', 'prazo_emprestimo',
-            'prazo_beneficio', 'prazo_cartao', 'Campanha'
-       ]
-        
-        df = df[ordem_colunas]
+            # Ordenar as colunas
+            ordem_colunas = [
+                'ORIGEM DO DADO', 'Nome_Cliente', 'Nome', 'Sobrenome', 'Matricula',
+                'CPF', 'Data_Nascimento', 'Mg_Emprestimo_Total',
+                'Mg_Emprestimo_Disponivel', 'Mg_Beneficio_Saque_Total',
+                'Mg_Beneficio_Saque_Disponivel', 'Mg_Cartao_Total',
+                'Mg_Cartao_Disponivel', 'Convenio', 'Vinculo_Servidor', 'Lotacao',
+                'Secretaria', 'FONE1', 'FONE2', 'FONE3', 'FONE4', 'Email',
+                'valor_liberado_emprestimo', 'valor_liberado_beneficio',
+                'valor_liberado_cartao', 'comissao_emprestimo', 'comissao_beneficio',
+                'comissao_cartao', 'valor_parcela_emprestimo',
+                'valor_parcela_beneficio', 'valor_parcela_cartao', 'banco_emprestimo',
+                'banco_beneficio', 'banco_cartao', 'prazo_emprestimo',
+                'prazo_beneficio', 'prazo_cartao', 'Campanha'
+           ]
+            
+            df = df[ordem_colunas]
 
 
         # Exibir o dataframe resultante
